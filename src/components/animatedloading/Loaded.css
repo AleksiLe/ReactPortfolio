@@ -1,0 +1,8 @@
+.slide-in {
+    transform: translateX(-100%);
+    transition: transform 0.5s ease-out;
+    animation: slide-in 0.5s forwards;
+  }
+  
+  @keyframes slide-in {
+    100% { transform: translateX(0); }}
