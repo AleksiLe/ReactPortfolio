@@ -5,10 +5,16 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import MyAppBar from './components/appbar/MyAppBar.tsx'
 import Index from './components/index/Index.tsx'
 import ErrorPage from './components/error/ErrorPage.tsx'
+import LoadingShowcase from './components/animatedloading/LoadingShowcase.tsx'
 
 const router = createBrowserRouter([{ 
   path: '/', 
   element:  <Index />, 
+  errorElement: <ErrorPage />
+},
+{
+  path: '/loader',
+  element: <LoadingShowcase />,
   errorElement: <ErrorPage />
 },
 ]);
