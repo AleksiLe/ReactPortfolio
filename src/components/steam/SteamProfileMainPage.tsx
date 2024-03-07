@@ -1,36 +1,42 @@
-import {
-    QueryClient,
-    QueryClientProvider,
-    useQuery,
-  } from '@tanstack/react-query'
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { useTheme } from '@mui/material/styles';
-import Loading from '../animatedloading/Loading';
-const queryClient = new QueryClient()
-export default function SteamProfileMainPage() {
-    return (
-        <QueryClientProvider client={queryClient}>
-            <SteamProfilePage />
-        </QueryClientProvider>
-    )
-}
+import { TextField } from '@mui/material';
+import SteamProfileCard from './SteamProfileCard';
+import { useState } from 'react';
 
-function SteamProfilePage() {
-    const steamApiKey = import.meta.env.VITE_STEAM_API_KEY
-    const publicCORS = "https://cors-anywhere.herokuapp.com/" // Enables public CORS (WIP)
-    const { isLoading, error, data } = useQuery({
-        queryKey: ['repoData'],
-        queryFn: () => fetch(`${publicCORS}https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${steamApiKey}&steamids=76561197960435530`).then(res => res.json()).then(data => data)
-    })
+export default function SteamProfileMainPage() {
     const theme = useTheme()
-  if (isLoading) return <Loading />
-  
-  if (error) return 'An error has occurred: ' + error.message
+    const [steamId, setSteamId] = useState<string | null>(null)
+    const [steadIdTextField, setSteamIdTextField] = useState<string>('')
+
+        
+    const handleKeyDown = async (event: React.KeyboardEvent<HTMLDivElement>) => {
+        if (event.key === 'Enter') {
+            setSteamId(steadIdTextField)
+            setSteamIdTextField('')
+        }
+    }
   
   return (
     <div style={{ paddingTop: `${theme.mixins.toolbar.minHeight}px` }}>
-        <h1>Steam Profile</h1>
-      <ReactQueryDevtools initialIsOpen />
+        <TextField id="filled-basic" label="Steam 64 ID" variant="standard" 
+            sx={{
+            "& .MuiInput-underline:before": {
+            borderBottom: "1px solid white"
+            },
+            "& .MuiInput-underline:hover:not(.Mui-disabled):before": {
+            borderBottom: "2px solid white"
+            },
+            "& .css-1eed5fa-MuiInputBase-root-MuiInput-root": {
+            color: "white"
+            },}}
+            InputLabelProps={{ 
+            style: { color: 'white'},
+            }} 
+            onChange={(event) => setSteamIdTextField(event.target.value)}
+            onKeyDown={(event) => handleKeyDown(event)}
+            value={steamId}
+            />
+        {steamId && <SteamProfileCard steamId={steamId}/>}
     </div>
   )
 }
